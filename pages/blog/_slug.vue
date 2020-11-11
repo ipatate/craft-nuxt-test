@@ -37,9 +37,10 @@ export default {
       {
         query: `
             query BlogPost {
-                entry(slug: "${slug}") {
+                entry(slug: "${slug}", status: ["live", "disabled"]) {
                     title
                     body
+                    status
                 }
             }
         `,
@@ -47,7 +48,7 @@ export default {
       { headers }
     );
     // only access for preview mode
-    if (!data.entry && !token) {
+    if ((!data.entry || data.entry.status === "disabled") && !token) {
       error({ statusCode: 404, message: "Page not found" });
     }
     return { entry: data.entry || {} };
