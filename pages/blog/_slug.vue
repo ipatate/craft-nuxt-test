@@ -21,7 +21,7 @@ export default {
     // just for display query params
     this.params = this.$route.query;
   },
-  async asyncData({ $axios, route, params }) {
+  async asyncData({ $axios, error, route, params }) {
     let headers = {};
     const { slug } = params;
     const { token } = route.query;
@@ -46,8 +46,11 @@ export default {
       },
       { headers }
     );
-
-    return { entry: data.entry };
+    // only access for preview mode
+    if (!data.entry && !token) {
+      error({ statusCode: 404, message: "Page not found" });
+    }
+    return { entry: data.entry || {} };
   },
 };
 </script>
