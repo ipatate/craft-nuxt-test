@@ -20,8 +20,12 @@ export default {
   mounted() {
     // just for display query params
     this.params = this.$route.query;
+    // only access for preview mode
+    if (!this.entry.status && !this.params.token) {
+      return this.$nuxt.error({ statusCode: 404, message: "Page not found" });
+    }
   },
-  async asyncData({ $axios, error, route, params }) {
+  async asyncData({ $axios, route, params }) {
     let headers = {};
     const { slug } = params;
     const { token } = route.query;
@@ -47,11 +51,13 @@ export default {
       },
       { headers }
     );
+    let { entry } = data;
     // only access for preview mode
     if ((!data.entry || data.entry.status === "disabled") && !token) {
-      error({ statusCode: 404, message: "Page not found" });
+      //   error({ statusCode: 404, message: "Page not found" });
+      entry = {};
     }
-    return { entry: data.entry || {} };
+    return { entry: entry || {} };
   },
 };
 </script>
