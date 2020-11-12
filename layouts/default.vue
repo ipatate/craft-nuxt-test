@@ -22,29 +22,33 @@ const holdPosition = debounce(300, () => {
  */
 const scrollSetPosition = () => {
   const currentPosition = JSON.parse(window.sessionStorage.getItem(getKey()));
-  console.log(currentPosition, "hello");
   if (currentPosition && currentPosition.scrollY !== undefined) {
     window.scrollTo(currentPosition.scrollX, currentPosition.scrollY);
   }
 };
 export default {
   mounted() {
-    if (this.$preview) {
+    const { query } = this.$route;
+
+    if (
+      query.preview ||
+      query["x-craft-live-preview"] ||
+      query["x-craft-preview"]
+    ) {
       // wait all resources loaded for set position scroll
-      window.onload = scrollSetPosition;
-      console.log(window, window.onload);
-      //   window.addEventListener("load", scrollSetPosition);
-      document.onreadystatechange = () => {
-        console.log(document.readyState);
-        if (document.readyState == "complete") {
-          scrollSetPosition();
-        }
-      };
+      //   window.onload = scrollSetPosition;
+      // don't work on prod :(
+      window.addEventListener("load", scrollSetPosition);
       window.addEventListener("scroll", holdPosition);
     }
   },
   unmounted() {
-    if (this.$preview) {
+    const { query } = this.$route;
+    if (
+      query.preview ||
+      query["x-craft-live-preview"] ||
+      query["x-craft-preview"]
+    ) {
       window.removeEventListener("scroll", holdPosition);
       window.removeEventListener("load", scrollSetPosition);
     }

@@ -14,8 +14,14 @@ export default {
   },
   mounted() {
     console.log(this.entry.status, this.$preview);
+    const { query } = this.$route;
     // only access for preview mode
-    if (this.entry.status === "disabled" && !this.$preview) {
+    if (
+      this.entry.status === "disabled" &&
+      !query.preview &&
+        !query["x-craft-live-preview"] &&
+        !query["x-craft-preview"]
+    ) {
       return this.$nuxt.error({ statusCode: 404, message: "Page not found" });
     }
   },
@@ -29,6 +35,7 @@ export default {
         "x-Craft-Token": token ? `${token}` : "",
       };
     }
+    console.log(headers);
     // axios query with graphql
     const { data } = await $axios.$post(
       process.env.API_URL,
