@@ -23,7 +23,7 @@ const getExcludes = async () => {
     return entry.uri;
   });
 
-  fs.writeFileSync("exclude.json", JSON.stringify(exclude));
+  fs.writeFileSync("./preGenerate/exclude.json", JSON.stringify(exclude));
 };
 
 getExcludes();
