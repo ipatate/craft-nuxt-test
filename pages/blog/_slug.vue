@@ -1,10 +1,7 @@
 <template>
   <div>
     <h1>{{ entry.title }}</h1>
-    <!-- <p>{{ entry.intro }}</p> -->
     <div v-html="entry.body" />
-    <!-- {{ ping }} -->
-    <!-- {{ JSON.stringify(params) }} -->
   </div>
 </template>
 
@@ -13,15 +10,12 @@ export default {
   data() {
     return {
       entry: {},
-      //   ping: "",
-      params: {},
     };
   },
   mounted() {
-    // just for display query params
-    this.params = this.$route.query;
+    console.log(this.entry.status, this.$preview);
     // only access for preview mode
-    if (!this.entry.status && !this.params.token) {
+    if (this.entry.status === "disabled" && !this.$preview) {
       return this.$nuxt.error({ statusCode: 404, message: "Page not found" });
     }
   },
@@ -51,12 +45,8 @@ export default {
       },
       { headers }
     );
-    let { entry } = data;
-    // only access for preview mode
-    if ((!data.entry || data.entry.status === "disabled") && !token) {
-      //   error({ statusCode: 404, message: "Page not found" });
-      entry = {};
-    }
+
+    const { entry } = data;
     return { entry: entry || {} };
   },
 };

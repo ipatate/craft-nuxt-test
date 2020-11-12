@@ -6,8 +6,6 @@
       <div v-html="entry.body" />
       <nuxt-link :to="entry.uri">Read more</nuxt-link>
     </div>
-    <!-- {{ ping }} -->
-    <!-- {{ JSON.stringify(params) }} -->
   </div>
 </template>
 
@@ -16,13 +14,7 @@ export default {
   data() {
     return {
       entries: [],
-      //   ping: "",
-      params: {},
     };
-  },
-  mounted() {
-    // just for display query params
-    this.params = this.$route.query;
   },
   async asyncData({ $axios, route }) {
     let headers = {};
